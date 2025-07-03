@@ -7,6 +7,15 @@ interface IERC20 {
 }
 
 contract CrowdFund {
+    event Launch(
+        uint256 id,
+        address indexed creator,
+        uint256 goal,
+        uint32 startAt,
+        uint32 endAt
+    );
+    event Cancel(uint256 id);
+
     struct Campaign {
         address creator;
         uint256 goal;
@@ -38,9 +47,16 @@ contract CrowdFund {
           endAt: _endAt,
           claimed: false
       });
+      emit Launch(count, msg.sender,_goal,_startAt,_endAt);
     }
 
-
+    function cancel(uint256 _id) external {
+        Campaign memory campaign = campaigns[_id];
+        require(campaign.creator == msg.sender, "not creator");
+        require(block.timestamp < campaign.startAt, "started");
+        delete campaigns[_id];
+        emit Cancel(_id);
+    }
 
 
 

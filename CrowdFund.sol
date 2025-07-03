@@ -29,6 +29,15 @@ contract CrowdFund {
         require(_endAt >= _startAt, "end at < start at ");
         require(_endAt <= block.timestamp + 90 days, "end at > max duration");
         count += 1;
+
+        campaigns[count] = Campaign({
+          creator: msg.sender,
+          goal: _goal,
+          pledged: 0,
+          startAt: _startAt,
+          endAt: _endAt,
+          claimed: false
+      });
     }
 
 
